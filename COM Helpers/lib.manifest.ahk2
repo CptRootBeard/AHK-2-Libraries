@@ -1,0 +1,3 @@
+;;COM Helpers - Full Library
+#include %A_LineFile%\..\GetActiveObjects.ahk2
+#include %A_LineFile%\..\variantTypeEnum.ahk2

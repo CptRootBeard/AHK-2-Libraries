@@ -1,0 +1,12 @@
+;;Enumerated constants that specify whether an object is open or closed, connecting to a data src, executing a cmd, or retrieving data
+;;Constants can be found here:
+;;https://docs.microsoft.com/en-us/sql/ado/reference/ado-api/objectstateenum?view=sql-server-ver15
+
+class ObjectState
+{
+	static Closed[] => 0 ;;Indicates that the object is closed.
+	static Open[] => 1 ;;Indicates that the object is open.
+	static Connecting[] => 2 ;;Indicates that the object is connecting.
+	static Executing[] => 4 ;;Indicates that the object is executing a command.
+	static Fetching[] => 8 ;;Indicates that the rows of the object are being retrieved.
+}

@@ -1,0 +1,16 @@
+;;Enumerated constants that specify available permissions for modifying data in a connection, opening a record, or specifying values for the Mode property of the Record and Stream objects. Not all modes may be available through COM, or available on your specific server configuration.
+;;Constants can be found here:
+;;https://docs.microsoft.com/en-us/sql/ado/reference/ado-api/connectmodeenum?view=sql-server-ver15
+
+class ConnectMode
+{
+	static Read[] => 1 ;;Indicates read-only permissions.
+	static ReadWrite[] => 3 ;;Indicates read/write permissions.
+	static Recursive[] => 0x400000 ;;Used in conjunction with the other *ShareDeny* values (adModeShareDenyNone, adModeShareDenyWrite, or adModeShareDenyRead) to propagate sharing restrictions to all sub-records of the current Record. It has no affect if the Record does not have any children. A run-time error is generated if it is used with adModeShareDenyNone only. However, it can be used with adModeShareDenyNone when combined with other values. For example, you can use "adModeRead Or adModeShareDenyNone Or adModeRecursive".
+	static ShareDenyNone[] => 16 ;;Allows others to open a connection with any permissions. Neither read nor write access can be denied to others.
+	static ShareDenyRead[] => 4 ;;Prevents others from opening a connection with read permissions.
+	static ShareDenyWrite[] => 8 ;;Prevents others from opening a connection with write permissions.
+	static ShareExclusive[] => 12 ;;Prevents others from opening a connection.
+	static Unknown[] => 0 ;;Default. Indicates that the permissions have not yet been set or cannot be determined.
+	static Write[] => 2 ;;Indicates write-only permissions.
+}

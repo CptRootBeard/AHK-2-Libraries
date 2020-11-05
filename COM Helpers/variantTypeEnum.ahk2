@@ -1,0 +1,45 @@
+;;VT_xyz for use with AHK's COMObject() function
+;;https://lexikos.github.io/v2/docs/commands/ComObject.htm
+
+;;Variant Type Constants defined in enum here:
+;;https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-oaut/3fe7db9f-5803-4dc4-9d14-5425d3f5461f
+
+class VT
+{
+	static EMPTY[] => 0x0000
+	static NULL[] => 0x0001
+	static I2[] => 0x0002
+	static I4[] => 0x0003
+	static R4[] => 0x0004
+	static R8[] => 0x0005
+	static CY[] => 0x0006
+	static DATE[] => 0x0007
+	static BSTR[] => 0x0008
+	static DISPATCH[] => 0x0009
+	static ERROR[] => 0x000A
+	static BOOL[] => 0x000B
+	static VARIANT[] => 0x000C
+	static UNKNOWN[] => 0x000D
+	static DECIMAL[] => 0x000E
+	static I1[] => 0x0010
+	static UI1[] => 0x0011
+	static UI2[] => 0x0012
+	static UI4[] => 0x0013
+	static I8[] => 0x0014
+	static UI8[] => 0x0015
+	static INT[] => 0x0016
+	static UINT[] => 0x0017
+	static VOID[] => 0x0018
+	static HRESULT[] => 0x0019
+	static PTR[] => 0x001A
+	static SAFEARRAY[] => 0x001B
+	static CARRAY[] => 0x001C
+	static USERDEFINED[] => 0x001D
+	static LPSTR[] => 0x001E
+	static LPWSTR[] => 0x001F
+	static RECORD[] => 0x0024
+	static INT_PTR[] => 0x0025
+	static UINT_PTR[] => 0x0026
+	static ARRAY[] => 0x2000
+	static BYREF[] => 0x4000
+}

@@ -1,0 +1,192 @@
+;;Here are several outlook enums converted into classes with read-only properties
+;;The enums themselves are now classes, and the constants are their static get-only properties.
+;;It makes for a little more typing, but it keeps the namespace clean.
+;;The actual constants have had their "ol" prefix removed, so you must reference olItemType.MailItem
+;;rather than olMailItem (VBA style, wrong) or olItemType.olMailItem (what you might expect, still wrong)
+
+;;olObjectClass enum class---------------------------------------------
+class olObjectClass {
+	static Account[] => 105 ;;An Account object.
+	static AccountRuleCondition[] => 135 ;;An AccountRuleCondition object.
+	static Accounts[] => 106 ;;An Accounts object.
+	static Action[] => 32 ;;An Action object.
+	static Actions[] => 33 ;;An Actions object.
+	static AddressEntries[] => 21 ;;An AddressEntries object.
+	static AddressEntry[] => 8 ;;An AddressEntry object.
+	static AddressList[] => 7 ;;An AddressList object.
+	static AddressLists[] => 20 ;;An AddressLists object.
+	static AddressRuleCondition[] => 170 ;;An AddressRuleCondition object.
+	static Application[] => 0 ;;An Application object.
+	static Appointment[] => 26 ;;An AppointmentItem object.
+	static AssignToCategoryRuleAction[] => 122 ;;An AssignToCategoryRuleAction object.
+	static Attachment[] => 5 ;;An Attachment object.
+	static Attachments[] => 18 ;;An Attachments object.
+	static AttachmentSelection[] => 169 ;;An AttachmentSelection object.
+	static AutoFormatRule[] => 147 ;;An AutoFormatRule object.
+	static AutoFormatRules[] => 148 ;;An AutoFormatRules object.
+	static CalendarModule[] => 159 ;;A CalendarModule object.
+	static CalendarSharing[] => 151 ;;A CalendarSharing object.
+	static Categories[] => 153 ;;A Categories object.
+	static Category[] => 152 ;;A Category object.
+	static CategoryRuleCondition[] => 130 ;;A CategoryRuleCondition object.
+	static ClassBusinessCardView[] => 168 ;;A BusinessCardView object.
+	static ClassCalendarView[] => 139 ;;A CalendarView object.
+	static ClassCardView[] => 138 ;;A CardView object.
+	static ClassIconView[] => 137 ;;An IconView object.
+	static ClassNavigationPane[] => 155 ;;A NavigationPane object.
+	static ClassPeopleView[] => 183 ;;A PeopleView object.
+	static ClassTableView[] => 136 ;;A TableView object.
+	static ClassTimeLineView[] => 140 ;;A TimelineView object.
+	static ClassTimeZone[] => 174 ;;A TimeZone object.
+	static ClassTimeZones[] => 175 ;;A TimeZones object.
+	static Column[] => 154 ;;A Column object.
+	static ColumnFormat[] => 149 ;;A ColumnFormat object.
+	static Columns[] => 150 ;;A Columns object.
+	static Conflict[] => 102 ;;A Conflict object.
+	static Conflicts[] => 103 ;;A Conflicts object.
+	static Contact[] => 40 ;;A ContactItem object.
+	static ContactsModule[] => 160 ;;A ContactsModule object.
+	static Conversation[] => 178 ;;A Conversation object.
+	static ConversationHeader[] => 182 ;;A ConversationHeader object.
+	static DistributionList[] => 69 ;;An ExchangeDistributionList object.
+	static Document[] => 41 ;;A DocumentItem object.
+	static Exception[] => 30 ;;An Exception object.
+	static Exceptions[] => 29 ;;An Exceptions object.
+	static ExchangeDistributionList[] => 111 ;;An ExchangeDistributionList object.
+	static ExchangeUser[] => 110 ;;An ExchangeUser object.
+	static Explorer[] => 34 ;;An Explorer object.
+	static Explorers[] => 60 ;;An Explorers object.
+	static Folder[] => 2 ;;A Folder object.
+	static Folders[] => 15 ;;A Folders object.
+	static FolderUserProperties[] => 172 ;;A UserDefinedProperties object.
+	static FolderUserProperty[] => 171 ;;A UserDefinedProperty object.
+	static FormDescription[] => 37 ;;A FormDescription object.
+	static FormNameRuleCondition[] => 131 ;;A FormNameRuleCondition object.
+	static FormRegion[] => 129 ;;A FormRegion object.
+	static FromRssFeedRuleCondition[] => 173 ;;A FromRssFeedRuleCondition object.
+	static FromRuleCondition[] => 132 ;;A ToOrFromRuleCondition object.
+	static ImportanceRuleCondition[] => 128 ;;An ImportanceRuleCondition object.
+	static Inspector[] => 35 ;;An Inspector object.
+	static Inspectors[] => 61 ;;An Inspectors object.
+	static ItemProperties[] => 98 ;;An ItemProperties object.
+	static ItemProperty[] => 99 ;;An ItemProperty object.
+	static Items[] => 16 ;;An Items object.
+	static Journal[] => 42 ;;A JournalItem object.
+	static JournalModule[] => 162 ;;A JournalModule object.
+	static Mail[] => 43 ;;A MailItem object.
+	static MailModule[] => 158 ;;A MailModule object.
+	static MarkAsTaskRuleAction[] => 124 ;;A MarkAsTaskRuleAction object.
+	static MeetingCancellation[] => 54 ;;A MeetingItem object that is a meeting cancellation notice.
+	static MeetingForwardNotification[] => 181 ;;A MeetingItem object that is a notice about forwarding the meeting request.
+	static MeetingRequest[] => 53 ;;A MeetingItem object that is a meeting request.
+	static MeetingResponseNegative[] => 55 ;;A MeetingItem object that is a refusal of a meeting request.
+	static MeetingResponsePositive[] => 56 ;;A MeetingItem object that is an acceptance of a meeting request.
+	static MeetingResponseTentative[] => 57 ;;A MeetingItem object that is a tentative acceptance of a meeting request.
+	static MoveOrCopyRuleAction[] => 118 ;;A MoveOrCopyRuleAction object.
+	static Namespace[] => 1 ;;A NameSpace object.
+	static NavigationFolder[] => 167 ;;A NavigationFolder object.
+	static NavigationFolders[] => 166 ;;A NavigationFolders object.
+	static NavigationGroup[] => 165 ;;A NavigationGroup object.
+	static NavigationGroups[] => 164 ;;A NavigationGroups object.
+	static NavigationModule[] => 157 ;;A NavigationModule object.
+	static NavigationModules[] => 156 ;;A NavigationModules object.
+	static NewItemAlertRuleAction[] => 125 ;;A NewItemAlertRuleAction object.
+	static Note[] => 44 ;;A NoteItem object.
+	static NotesModule[] => 163 ;;A NotesModule object.
+	static OrderField[] => 144 ;;An OrderField object.
+	static OrderFields[] => 145 ;;An OrderFields object.
+	static OutlookBarGroup[] => 66 ;;An OutlookBarGroup object.
+	static OutlookBarGroups[] => 65 ;;An OutlookBarGroups object.
+	static OutlookBarPane[] => 63 ;;An OutlookBarPane object.
+	static OutlookBarShortcut[] => 68 ;;An OutlookBarShortcut object.
+	static OutlookBarShortcuts[] => 67 ;;An OutlookBarShortcuts object.
+	static OutlookBarStorage[] => 64 ;;An OutlookBarStorage object.
+	static Outspace[] => 180 ;;An AccountSelector object.
+	static Pages[] => 36 ;;A Pages object.
+	static Panes[] => 62 ;;A Panes object.
+	static PlaySoundRuleAction[] => 123 ;;A PlaySoundRuleAction object.
+	static Post[] => 45 ;;A PostItem object.
+	static PropertyAccessor[] => 112 ;;A PropertyAccessor object.
+	static PropertyPages[] => 71 ;;A PropertyPages object.
+	static PropertyPageSite[] => 70 ;;A PropertyPageSite object.
+	static Recipient[] => 4 ;;A Recipient object.
+	static Recipients[] => 17 ;;A Recipients object.
+	static RecurrencePattern[] => 28 ;;A RecurrencePattern object.
+	static Reminder[] => 101 ;;A Reminder object.
+	static Reminders[] => 100 ;;A Reminders object.
+	static Remote[] => 47 ;;A RemoteItem object.
+	static Report[] => 46 ;;A ReportItem object.
+	static Results[] => 78 ;;A Results object.
+	static Row[] => 121 ;;A Row object.
+	static Rule[] => 115 ;;A Rule object.
+	static RuleAction[] => 117 ;;A RuleAction object.
+	static RuleActions[] => 116 ;;A RuleActions object.
+	static RuleCondition[] => 127 ;;A RuleCondition object.
+	static RuleConditions[] => 126 ;;A RuleConditions object.
+	static Rules[] => 114 ;;A Rules object.
+	static Search[] => 77 ;;A Search object.
+	static Selection[] => 74 ;;A Selection object.
+	static SelectNamesDialog[] => 109 ;;A SelectNamesDialog object.
+	static SenderInAddressListRuleCondition[] => 133 ;;A SenderInAddressListRuleCondition object.
+	static SendRuleAction[] => 119 ;;A SendRuleAction object.
+	static Sharing[] => 104 ;;A SharingItem object.
+	static SimpleItems[] => 179 ;;A SimpleItems object.
+	static SolutionsModule[] => 177 ;;A SolutionsModule object.
+	static StorageItem[] => 113 ;;A StorageItem object.
+	static Store[] => 107 ;;A Store object.
+	static Stores[] => 108 ;;A Stores object.
+	static SyncObject[] => 72 ;;A SyncObject object.
+	static SyncObjects[] => 73 ;;A SyncObjects object.
+	static Table[] => 120 ;;A Table object.
+	static Task[] => 48 ;;A TaskItem object.
+	static TaskRequest[] => 49 ;;A TaskRequestItem object.
+	static TaskRequestAccept[] => 51 ;;A TaskRequestAcceptItem object.
+	static TaskRequestDecline[] => 52 ;;A TaskRequestDeclineItem object.
+	static TaskRequestUpdate[] => 50 ;;A TaskRequestUpdateItem object.
+	static TasksModule[] => 161 ;;A TasksModule object.
+	static TextRuleCondition[] => 134 ;;A TextRuleCondition object.
+	static UserDefinedProperties[] => 172 ;;A UserDefinedProperties object.
+	static UserDefinedProperty[] => 171 ;;A UserDefinedProperty object.
+	static UserProperties[] => 38 ;;A UserProperties object.
+	static UserProperty[] => 39 ;;A UserProperty object.
+	static View[] => 80 ;;A View object.
+	static ViewField[] => 142 ;;A ViewField object.
+	static ViewFields[] => 141 ;;A ViewFields object.
+	static ViewFont[] => 146 ;;A ViewFont object.
+	static Views[] => 79 ;;A Views object.
+}
+
+
+;;olItemType enum class----------------------------------------------------
+class olItemType {
+	static AppointmentItem[] => 1 ;;An AppointmentItem object.
+	static ContactItem[] => 2 ;;A ContactItem object.
+	static DistributionListItem[] => 7 ;;A DistListItem object.
+	static JournalItem[] => 4 ;;A JournalItem object.
+	static MailItem[] => 0 ;;A MailItem object.
+	static NoteItem[] => 5 ;;A NoteItem object.
+	static PostItem[] => 6 ;;A PostItem object.
+	static TaskItem[] => 3 ;;A TaskItem object.
+}
+
+;;olSaveAsType enum class--------------------------------------------------
+class olSaveAsType {
+	static Doc[] => 4 ;;Microsoft Office Word format (.doc)
+	static HTML[] => 5 ;;HTML format (.html)
+	static ICal[] => 8 ;;iCal format (.ics)
+	static MHTML[] => 10 ;;MIME HTML format (.mht)
+	static MSG[] => 3 ;;Outlook message format (.msg)
+	static MSGUnicode[] => 9 ;;Outlook Unicode message format (.msg)
+	static RTF[] => 1 ;;Rich Text format (.rtf)
+	static Template[] => 2 ;;Microsoft Outlook template (.oft)
+	static TXT[] => 0 ;;Text format (.txt)
+	static VCal[] => 7 ;;VCal format (.vcs)
+	static VCard[] => 6 ;;VCard format (.vcf)
+}
+
+;;olAttachmentType enum class---------------------------------------------
+class olAttachmentType {
+	static ByValue[] => 1 ;;The attachment is a copy of the original file and can be accessed even if the original file is removed.
+	static Embeddeditem[] => 5 ;;The attachment is an Outlook message format file (.msg) and is a copy of the original message.
+	static OLE[] => 6 ;;The attachment is an OLE document.
+}

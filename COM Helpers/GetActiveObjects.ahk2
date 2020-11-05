@@ -1,0 +1,50 @@
+; Example:
+
+;; list := ""
+;; for name, obj in GetActiveObjects()
+    ;; list .= name " -- " ComObjType(obj, "Name") "`n"    
+;; MsgBox list
+
+; Output looks like this (my system):
+
+; !{00024500-0000-0000-C000-000000000046} -- _Application
+; !{00024505-0016-0000-C000-000000000046} -- _Application
+; C:\Users\Tigerlily\Documents\setSysColors enums.xlsm -- _Workbook
+; clsid:FFDE5359-5502-4F1A-8395-EFCAEEE02D3D: -- 
+
+
+; v2 compatible script (v2 a122)
+GetActiveObjects(Prefix:="", CaseSensitive:=false) {
+    objects := Map()
+    ,DllCall("ole32\CoGetMalloc", "uint", 1, "ptr*", malloc:=0) ; malloc: IMalloc
+    ,DllCall("ole32\CreateBindCtx", "uint", 0, "ptr*", bindCtx:=0) ; bindCtx: IBindCtx
+    ,ComCall(8, bindCtx, "ptr*", rot:=0) ; rot: IRunningObjectTable
+    ,ComCall(9, rot, "ptr*", enum:=0) ; enum: IEnumMoniker
+    while ComCall(3, enum, "uint", 1, "ptr*", mon:=0, "ptr", 0) = 0 ; mon: IMoniker
+    {
+        ComCall(20, mon, "ptr", bindCtx, "ptr", 0, "ptr*", pname:=0) ; GetDisplayName
+        , name := StrGet(pname, "UTF-16")
+        , ComCall(5, malloc, "ptr", pname) ; Free
+        if (Prefix == "" || InStr(name, Prefix, CaseSensitive) = 1) {
+            ComCall(6, rot, "ptr", mon, "ptr*", punk:=0) ; GetObject
+            ; Wrap the pointer as IDispatch if available, otherwise as IUnknown.
+            try
+            {
+                if (pdsp := ComObjQuery(punk, "{00020400-0000-0000-C000-000000000046}"))
+                    ObjAddRef(pdsp.ptr),obj := ComObject(9, pdsp.ptr, 1),ObjRelease(punk)
+                else
+                    obj := ComObject(13, punk, 1)
+            }
+            catch
+                obj := ComObject(13, punk, 1)
+            ; Store it in the return array by suffix.
+            objects[SubStr(name,StrLen(Prefix) + 1)] := obj
+        }
+        ObjRelease(mon)
+    }
+    ObjRelease(enum)
+    ,ObjRelease(rot)
+    ,ObjRelease(bindCtx)
+    ,ObjRelease(malloc)
+    return objects
+}

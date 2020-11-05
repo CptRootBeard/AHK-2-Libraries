@@ -1,0 +1,31 @@
+;;This class converts CSV strings into tables of data (or vice-versa)
+;;SF.TODO -> Allow the use of double quotes to include commas within string values
+class CSV {
+	;;Converts string to AHK data as follows:
+	;;Default is headers:=true, rowMajor:=true
+	;; If data has headers{
+		;; If data is row-major{
+			;; convert data into an array of maps where headers are the map keys of each item
+			;; e.g. results[N] would be some Map("Header1":"rNc1","Header2":"rNc2",etc)
+		;; } else {
+			;; convert data into a map of arrays, where headers are the map keys corresponding to each array of entries
+			;; e.g. results["HeaderN"] would be some [r1cN, r2cN, r3cN, etc.]
+		;; }
+	;; } else {
+		;; If data is row-major{
+			;; convert data into an array of arrays where row index comes first
+			;; e.g. results[N] would be some [rNc1, rNc2, rNc3, etc.]
+		;; } else {
+			;; convert data into an array of arrays where column index comes first
+			;; e.g. results[N] would be some [r1cN, r2cN, r3cN, etc.]
+		;; }
+	;; }
+	
+	static Load(stringIn, delim:=",", headers:=true, rowMajor:=true){
+		;;No matter how the data is meant to output, the first step will be to split by line, then by delim
+		
+	}
+	static Dump(){
+	
+	}
+}

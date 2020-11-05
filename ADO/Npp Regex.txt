@@ -1,0 +1,9 @@
+;;For use with Notepad++'s Regex Engine
+
+;;For enum values found in table format of Constant, Value, Description from Microsoft Docs
+;;Find the following regex (replace 'ad' in the beginning of the exp. with whatever prefix you wish to remove from the const names - e.g. adMode->Mode, adErr->Err, etc):
+(?-s)^ad([0-9a-zA-Z]*)\s((?:0x[0-9ABCDEF]*)|(?:-?[0-9]*))\s(.*)$
+
+;;Formatting these values into static, read-only properties of a class. Including descriptions as same-line comments after each prop.
+;;Replace with this substitution and paste within an AHK2 class:
+\tstatic ${1}[] => ${2} ;;${3}

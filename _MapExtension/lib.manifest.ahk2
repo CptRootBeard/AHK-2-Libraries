@@ -1,0 +1,2 @@
+;;_ArrayExtension - Full Library
+#include %A_LineFile%\..\_MapExtension.ahk2

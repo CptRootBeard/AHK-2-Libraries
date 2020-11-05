@@ -1,0 +1,11 @@
+;;Enumerated constants that specify the type of an ADO Record object. Tis enum has no ADO/WFC equivalent, so the naming patterns have not been altered beyond removing the "ad" prefix
+;;Constants can be found here:
+;;https://docs.microsoft.com/en-us/sql/ado/reference/ado-api/recordtypeenum?view=sql-server-ver15
+
+class RecordType
+{
+	static SimpleRecord[] => 0 ;;Indicates a simple record (does not contain child nodes).
+	static CollectionRecord[] => 1 ;;Indicates a collection record (contains child nodes).
+	static RecordUnknown[] => -1 ;;Indicates that the type of this Record is unknown.
+	static StructDoc[] => 2 ;;Indicates a special kind of collection record that represents COM structured documents
+}

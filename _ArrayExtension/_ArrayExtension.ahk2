@@ -1,0 +1,198 @@
+;;This class contains methods and properties which will extend the Array class in AHK V2
+class _ArrayExtension extends Array {
+	;;Mimics JS Array.Map functionality
+	;;TODO - rearrange to move if() outside of loop for performance
+	MapFunc(theFn){
+		mappedArray := []
+		for i, v in this {
+			;;Check how many params theFn can accept
+			x := theFn.MaxParams
+			if(x=3){
+				mappedArray.push(theFn.call(v, i, this))
+			} else if(x=2){
+				mappedArray.push(theFn.call(v, i))
+			} else if(x=1){
+				mappedArray.push(theFn.call(v))
+			} else {
+				throw Exception(Format("Array.MapFunc's callback function requires 1 to 3 parameters. {1} were passed.",x))
+			}
+		}
+		return mappedArray
+	}
+	
+	;;Mimics JS Array.Filter
+	Filter(filtFn){
+		filteredArray := []
+		for i, v in this.MapFunc(filtFn){
+			if(v){
+				filteredArray.push(this[i])
+			}
+		}
+		return filteredArray
+	}
+	
+	;;Mimics JS Array.every
+	Every(testFn){
+		testArray := this.MapFunc(testFn)
+		for i, v in testArray {
+			if(not v){
+				return false
+			}
+		}
+		return true
+	}
+	
+	;;Mimics JS Array.some
+	Some(testFn){
+		testArray := this.MapFunc(testFn)
+		for i, v in testArray {
+			if(v){
+				return true
+			}
+		}
+		return false
+	}
+	
+	;;Mimics JS Array.includes()
+	Includes(valueToFind, fromIndex:=""){
+		if(fromIndex){
+			start:=fromIndex
+		} else {
+			start:=1
+		}
+		
+		for i, v in this {
+			if(i>=start){
+				if(v=valueToFind){
+					return true
+				}
+			}
+		}
+		
+		return false
+	}
+	
+	;;Mimic JS Array.sort() :In-place -> use a bubble-sort for stability
+	Sort(sortFn:=""){
+		;;establish a default function if sortFn was empty
+		;;TODO - make sure _defaultFn works consistently with objects/arrays
+		_defaultFn(a,b){
+			if(IsNumber(a) and IsNumber(b)){
+				return a-b
+			} else {
+				;;Run a string compare, using toString methods when present
+				return StrCompare((HasMethod(a,"toString")?a.toString():a),(HasMethod(b,"toString")?b.toString():b),"Logical")
+			}
+		}
+		
+		if(not sortFn){
+			;;Default function: A->Z for string, and least->greatest for #s
+			fn := ((a,b)=>_defaultFn(a,b))
+		} else {
+			fn := sortFn
+		}
+		
+		;;Initialize sorting flag to start the while loop
+		sortingFlag:=true
+		
+		;;If we had to move elements, we need another run-through
+		while sortingFlag {
+			;;Assume we won't have to sort this time through, until we actually sort
+			sortingflag := false
+			;;msgbox("in the while loop")
+			;;Loop through the pairs of this
+			loop this.length-1 {
+				test:=fn.Call(this[A_Index], this[A_Index+1])
+				;;msgbox("this is the test result: " . test)
+				;;If test returns -1 or 0, the items are already in-place
+				if(test>0){
+					;;buffer value at i
+					buff:=this[A_Index]
+					;;Move value from i+1 to i
+					this[A_Index]:=this[A_Index+1]
+					;;Move old value of i to i+1
+					this[A_Index+1]:=buff
+					;;Set sorting flag so we need another pass
+					sortingFlag:=true
+				}
+			}
+		}
+		return this
+	}
+	
+	;;Mimics JS Array.slice()
+	Slice(start:="", end:=""){
+		output:=[]
+		L:=this.length
+		
+		;;Check if start is empty or in a valid range
+		;;If not, return empty array
+		if(start=""){
+			realStart:=1
+		} else if((-L<start) and (start<0)){
+			realStart:=start+L
+		} else if((0<start) and (start<=L)){
+			realStart:=start
+		} else {
+			return output
+		}
+		
+		;;Check if end is empty or in a valid range
+		;;If not, return empty array
+		if(end=""){
+			realEnd:=L
+		} else if((-L<end) and (end<0)){
+			realEnd:=end+L
+		} else if((0<end) and (end<=L)){
+			realEnd:=end
+		} else {
+			return output
+		}
+		
+		;;Push values whose index falls between realStart and realEnd
+		for i, v in this {
+			if(realStart <= i) and (i <= realEnd){
+				output.push(v)
+			}
+		}
+		return output
+	}
+	
+	;;Join the entries in the array as a delimited string, where possible
+	Join(delim:=","){
+		joinedString:=""
+		
+		for v in this{
+			;;If v has a "toString()" method, use it
+			;;else use the plain value
+			if(HasMethod(v, "toString")){
+				joinedString .= v.toString()
+			} else {
+				joinedString .= v
+			}
+			
+			;;Concat the delimiter as well
+			joinedString.=delim
+		}
+		
+		;;Remove the delimiter from the end of the final item
+		joinedString := RTrim(joinedString, delim)
+		return joinedString
+	}
+	
+	;;toString for an array will enforce comma delim
+	toString(){
+		output:=this.join()
+		return output
+	}
+	
+	;;TODO - Mimic JS Array.reverse() :In-place
+	;;TODO - Mimic JS Array.concat()
+	;;TODO - Mimic JS Array.flat()
+	
+}
+
+;;Inject the extension methods into the actual array object
+for name, method in _ArrayExtension.Prototype.OwnMethods(){
+	Array.Prototype.DefineMethod(name, method)
+}

@@ -1,0 +1,187 @@
+;;ADO.ahk2
+;;by Spencer Faull
+/*
+	This class wraps around the ADO connection and command objects, as well as some ADO Enum values.
+	This includes a method that can convert an open recordSet object into an array of maps (for record/row major data) or a map of arrays (for field/column major data)
+	(It's not usually as useful, but every once in a while you need to operate on columns/fields rather than rows/records.)
+*/
+
+class ADO
+{
+	;;Each enum's group will be a nested class,
+	;;and each enum value will be a static, read-only property
+	class Enums
+	{
+		#include %A_LineFile%\..\enumDataType.ahk2
+		#include %A_LineFile%\..\enumCursorType.ahk2
+		#include %A_LineFile%\..\enumCursorOptions.ahk2
+		#include %A_LineFile%\..\enumEditMode.ahk2
+		#include %A_LineFile%\..\enumErrorValue.ahk2
+		#include %A_LineFile%\..\enumConnectMode.ahk2
+		#include %A_LineFile%\..\enumObjectState.ahk2
+		#include %A_LineFile%\..\enumRecordType.ahk2
+	}
+	
+	;;These are very basic wrapper/factory classes (for now), basically just meant to skip a few lines of code with initializing connection and command objects
+	class Connection
+	{
+		static New(connectionStringIn, connectionMode){
+			;;Create the COM object
+			x := ComObjCreate("ADODB.Connection")
+			
+			;;Set the connection string and mode per the input args
+			x.ConnectionString := connectionStringIn
+			x.Mode := connectionMode
+			
+			;;Return the COM object
+			return x
+		}
+	}
+
+	;;These are very basic wrapper/factory classes (for now), basically just meant to skip a few lines of code with initializing connection and command objects
+	class Command
+	{
+		static New(){
+			return ComObjCreate("ADODB.Command")
+		}
+		
+		static NewFromConnection(connectionIn, cmdStr:=""){
+			;;Create the COM object and attach it to a connection
+			x := ComObjCreate("ADODB.Command")
+			x.ActiveConnection := connectionIn
+			
+			;;Set the command text if provided
+			if(cmdStr){
+				x.CommandText := cmdStr
+			}
+			return x
+		}
+	}
+	
+	;;These are very basic wrapper/factory classes (for now), basically just meant to skip a few lines of code with initializing connection and command objects
+	class RecordSet
+	{
+		static New(){
+			return ComObjCreate("ADODB.RecordSet")
+		}
+		
+		static NewFromConnection(connectionIn, src:="", cursorType:=""){
+			;;Create the COM object and attach it to a connection
+			x := ComObjCreate("ADODB.RecordSet")
+			x.ActiveConnection := connectionIn
+			
+			;;Set the source if provided
+			if(src){
+				x.Source := src
+			}
+			
+			;;Set cursorType if provided
+			if(cursorType){
+				x.CursorType := cursorType
+			}
+			
+			return x
+		}
+	}
+	
+	;;This method converts an ADODB.RecordSet object into an array of map objects
+	;;OR a map of arrays, depending on rowMajor=true or =false (a.k.a column major)
+	static loadRecordSet(recSet, rowMajor:=true){
+		;;Throw an error if this isn't a recordset
+		if(!(ComObjType(recSet, "Class")="Recordset")){
+			throw Exception("ADO.loadRecordSet did not receive a valid ADODB.Recordset object.")
+		}
+		
+		;;Set results up as either an array (row major) or Map (column major)
+		results:=(rowMajor?[]:Map())
+		
+		;;If there are results to return, store them in results
+		if(!(recSet.EOF OR recSet.BOF)){
+			
+			;;Count number of fields/columns in recordSet
+			totalColumns := recSet.Fields.Count
+			
+			;;RecordCount only provides a valid result here for Static and Keyset cursor types
+			;;Otherwise, we have to count and resize as we go
+			if(recSet.CursorType = ADO.Enums.CursorType.KEYSET OR recSet.CursorType = ADO.Enums.CursorType.STATIC){
+				totalRows := recSet.RecordCount
+			} else {
+				totalRows := ""
+			}
+			
+			;;Store all the column names
+			fieldNames := []
+			Loop totalColumns {
+				;;Remember, the first field is in Fields.Item(0), so we have to subtract one when we reference our loop counter
+				fieldNames.push(recSet.Fields.Item(A_Index - 1).Name)
+			}
+			
+			;;Construct AHK results from recordSet, depending on rowMajor flag
+			if(rowMajor){
+				;;Predeclare and size result entries if we can
+				if(totalRows){
+					results.Length := totalRows
+					Loop results.Length {
+						results[A_Index]:= Map()
+						results[A_Index].Capacity := totalColumns
+					}
+				}
+				
+				;;Loop through the rows by moving the record pointer
+				Loop {
+					rNum := A_Index
+					;;SF.TODO -> Move the if{} outside of the loop
+					if(!totalRows){
+							results.push(Map())
+							results[rNum].Capacity := totalColumns
+					}
+					;;Now loop through the columns, writing each field name and value as a mapped key-value pair within the result array of maps
+					Loop totalColumns {
+						cNum := A_Index
+						;;Subtract one from cNum when looking at Fields collection, as it is zero-based and AHK is one-based
+						results[rNum][fieldNames[cNum]] := recSet.Fields.Item(cNum - 1).Value
+					}
+					recSet.MoveNext()
+				} Until recSet.EOF
+				
+			} else {
+				;;Predeclare and size results entries if we can
+				results.Capacity := totalColumns
+				if(totalRows){
+					for k,v in fieldNames{
+						results[v] := []
+						results[v].Length := totalRows
+					}
+				} else {
+					for k,v in fieldNames{
+						results[v] := []
+					}
+				}
+				
+				;;Loop through the rows by moving the record pointer
+				Loop {
+					rNum := A_Index
+					
+					if(totalRows){
+						;;Now loop through the columns, pushing each field value to an array within the result map depending on its column
+						Loop totalColumns {
+							cNum := A_Index
+							;;Subtract one from cNum when looking at Fields collection, as it is zero-based and AHK is one-based
+							results[fieldNames[cNum]][rNum] := recSet.Fields.Item(cNum - 1).Value
+						}
+					} else {
+						Loop totalColumns {
+							cNum := A_Index
+							cName := fieldNames[cNum]
+							;;Subtract one from cNum when looking at Fields collection, as it is zero-based and AHK is one-based
+							results[cName].push(recSet.Fields.Item(cNum - 1).Value)
+						}
+					}
+					recSet.MoveNext()
+					
+				} Until recSet.EOF
+			}
+		}
+		return results
+	}
+}

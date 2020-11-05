@@ -1,0 +1,2 @@
+;;ADO Wrapper - Full Library
+#include %A_LineFile%\..\ADO.ahk2

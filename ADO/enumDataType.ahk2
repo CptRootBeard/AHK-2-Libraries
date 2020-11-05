@@ -1,0 +1,47 @@
+;;Enumerated constants that determine the data type of an ADO field, param, or property. Note that some of these types are not actively supported by ADO, but have been included for completeness.
+;;Constants can be found here:
+;;https://docs.microsoft.com/en-us/sql/ado/reference/ado-api/datatypeenum?view=sql-server-ver15
+
+class DataType
+{
+	static Array[] => 0x2000 ;;A flag value, always combined with another data type constant, that indicates an array of the other data type. Does not apply to ADOX.
+	static BigInt[] => 20 ;;Indicates an eight-byte signed integer (DBTYPE_I8).
+	static Binary[] => 128 ;;Indicates a binary value (DBTYPE_BYTES).
+	static Boolean[] => 11 ;;Indicates a Boolean value (DBTYPE_BOOL).
+	static BSTR[] => 8 ;;Indicates a null-terminated character string (Unicode) (DBTYPE_BSTR).
+	static Chapter[] => 136 ;;Indicates a four-byte chapter value that identifies rows in a child rowset (DBTYPE_HCHAPTER).
+	static Char[] => 129 ;;Indicates a string value (DBTYPE_STR).
+	static Currency[] => 6 ;;Indicates a currency value (DBTYPE_CY). Currency is a fixed-point number with four digits to the right of the decimal point. It is stored in an eight-byte signed integer scaled by 10,000.
+	static Date[] => 7 ;;Indicates a date value (DBTYPE_DATE). A date is stored as a double, the whole part of which is the number of days since December 30, 1899, and the fractional part of which is the fraction of a day.
+	static DBDate[] => 133 ;;Indicates a date value (yyyymmdd) (DBTYPE_DBDATE).
+	static DBTime[] => 134 ;;Indicates a time value (hhmmss) (DBTYPE_DBTIME).
+	static DBTimeStamp[] => 135 ;;Indicates a date/time stamp (yyyymmddhhmmss plus a fraction in billionths) (DBTYPE_DBTIMESTAMP).
+	static Decimal[] => 14 ;;Indicates an exact numeric value with a fixed precision and scale (DBTYPE_DECIMAL).
+	static Double[] => 5 ;;Indicates a double-precision floating-point value (DBTYPE_R8).
+	static Empty[] => 0 ;;Specifies no value (DBTYPE_EMPTY).
+	static Error[] => 10 ;;Indicates a 32-bit error code (DBTYPE_ERROR).
+	static FileTime[] => 64 ;;Indicates a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 (DBTYPE_FILETIME).
+	static GUID[] => 72 ;;Indicates a globally unique identifier (GUID) (DBTYPE_GUID).
+	static IDispatch[] => 9 ;;Indicates a pointer to an IDispatch interface on a COM object (DBTYPE_IDISPATCH).
+	static Integer[] => 3 ;;Indicates a four-byte signed integer (DBTYPE_I4).
+	static IUnknown[] => 13 ;;Indicates a pointer to an IUnknown interface on a COM object (DBTYPE_IUNKNOWN).
+	static LongVarBinary[] => 205 ;;Indicates a long binary value.
+	static LongVarChar[] => 201 ;;Indicates a long string value.
+	static LongVarWChar[] => 203 ;;Indicates a long null-terminated Unicode string value.
+	static Numeric[] => 131 ;;Indicates an exact numeric value with a fixed precision and scale (DBTYPE_NUMERIC).
+	static PropVariant[] => 138 ;;Indicates an Automation PROPVARIANT (DBTYPE_PROP_VARIANT).
+	static Single[] => 4 ;;Indicates a single-precision floating-point value (DBTYPE_R4).
+	static SmallInt[] => 2 ;;Indicates a two-byte signed integer (DBTYPE_I2).
+	static TinyInt[] => 16 ;;Indicates a one-byte signed integer (DBTYPE_I1).
+	static UnsignedBigInt[] => 21 ;;Indicates an eight-byte unsigned integer (DBTYPE_UI8).
+	static UnsignedInt[] => 19 ;;Indicates a four-byte unsigned integer (DBTYPE_UI4).
+	static UnsignedSmallInt[] => 18 ;;Indicates a two-byte unsigned integer (DBTYPE_UI2).
+	static UnsignedTinyInt[] => 17 ;;Indicates a one-byte unsigned integer (DBTYPE_UI1).
+	static UserDefined[] => 132 ;;Indicates a user-defined variable (DBTYPE_UDT).
+	static VarBinary[] => 204 ;;Indicates a binary value.
+	static VarChar[] => 200 ;;Indicates a string value.
+	static Variant[] => 12 ;;Indicates an Automation Variant (DBTYPE_VARIANT).
+	static VarNumeric[] => 139 ;;Indicates a numeric value.
+	static VarWChar[] => 202 ;;Indicates a null-terminated Unicode character string.
+	static WChar[] => 130 ;;Indicates a null-terminated Unicode character string (DBTYPE_WSTR).
+}

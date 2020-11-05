@@ -1,0 +1,11 @@
+;;Enumerated constants that specify editing status of a record
+;;Constants can be found here:
+;;https://docs.microsoft.com/en-us/sql/ado/reference/ado-api/editmodeenum?view=sql-server-ver15
+
+class EditMode
+{
+	static None[] => 0 ;;Indicates that no editing operation is in progress.
+	static InProgress[] => 1 ;;Indicates that data in the current record has been modified but not saved.
+	static Add[] => 2 ;;Indicates that the AddNew method has been called, and the current record in the copy buffer is a new record that has not been saved in the database.
+	static Delete[] => 4 ;;Indicates that the current record has been deleted.
+}

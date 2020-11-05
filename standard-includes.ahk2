@@ -1,0 +1,14 @@
+;;Standard Includes - v20.1105
+;;Use the following format for entries
+;;On separate lines, type the name of the lib folder
+;;Then run the following find/replace regex on the whole document:
+
+;;Find:
+;;(?-s)^[^;#[:space:]].*$
+;;Replace All:
+;;#include %A_LineFile%\\..\\$0\\lib.manifest.ahk2
+
+#include %A_LineFile%\..\_ArrayExtension\lib.manifest.ahk2
+#include %A_LineFile%\..\_MapExtensions\lib.manifest.ahk2
+#include %A_LineFile%\..\_DataStructures\lib.manifest.ahk2
+#include %A_LineFile%\..\COM Helpers\lib.manifest.ahk2

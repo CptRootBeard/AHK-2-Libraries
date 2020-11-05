@@ -1,0 +1,20 @@
+;;Enumerated constants for use with the .Supports() method of the RecordSet object. e.g. -> if someRecordSet.Supports(ADO.Enums.CursorOptions.Notify) returns true, it is safe to use someRecordSet.Notify()
+;;Constants can be found here:
+;;https://docs.microsoft.com/en-us/sql/ado/reference/ado-api/cursoroptionenum?view=sql-server-ver15
+
+class CursorOptions
+{
+	static AddNew[] => 0x1000400 ;;Supports the AddNew method to add new records.
+	static ApproxPosition[] => 0x4000 ;;Supports the AbsolutePosition and AbsolutePage properties.
+	static Bookmark[] => 0x2000 ;;Supports the Bookmark property to gain access to specific records.
+	static Delete[] => 0x1000800 ;;Supports the Delete method to delete records.
+	static Find[] => 0x80000 ;;Supports the Find method to locate a row in a Recordset.
+	static HoldRecords[] => 0x100 ;;Retrieves more records or changes the next position without committing all pending changes.
+	static Index[] => 0x100000 ;;Supports the Index property to name an index.
+	static MovePrevious[] => 0x200 ;;Supports the MoveFirst and MovePrevious methods, and Move or GetRows methods to move the current record position backward without requiring bookmarks.
+	static Notify[] => 0x40000 ;;Indicates that the underlying data provider supports notifications (which determines whether Recordset events are supported).
+	static Resync[] => 0x20000 ;;Supports the Resync method to update the cursor with the data that is visible in the underlying database.
+	static Seek[] => 0x200000 ;;Supports the Seek method to locate a row in a Recordset.
+	static Update[] => 0x1008000 ;;Supports the Update method to modify existing data.
+	static UpdateBatch[] => 0x10000 ;;Supports batch updating (UpdateBatch and CancelBatch methods) to transmit groups of changes to the provider.
+}

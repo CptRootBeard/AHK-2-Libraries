@@ -1,0 +1,43 @@
+;;This class contains methods and properties which will extend the Array class in AHK V2
+class _MapExtension extends Map {
+	;;Join the entries in the map as a delimited string - "key: value, key2: value2, etc..."
+	toString(){
+		joinedString:=""
+		
+		for k, v in this {
+			;;If k has a "toString()" method, use it
+			;;else use the plain value
+			if(HasMethod(k, "toString")){
+				joinedString .= k.toString()
+			} else {
+				joinedString .= k
+			}
+			;;Concat the delimiter as well
+			joinedString.=": "
+			
+			;;If v has a "toString()" method, use it
+			;;else use the plain value
+			if(HasMethod(v, "toString")){
+				joinedString .= v.toString()
+			} else {
+				joinedString .= v
+			}
+			
+			;;Concat the delimiter as well
+			joinedString.=", "
+		}
+		
+		;;Remove the delimiter from the end of the final item
+		joinedString := RTrim(joinedString, ", ")
+		return joinedString
+	}
+}
+
+;;Inject the extension methods into the actual array object
+for name, method in _MapExtension.Prototype.OwnMethods(){
+	Map.Prototype.DefineMethod(name, method)
+}
+
+;; Test
+;; x := Map("a",1,"b",2,"c",3).toString()
+;; msgbox(x)

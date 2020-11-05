@@ -1,0 +1,47 @@
+;;PickOne takes an array of strings as input, and produces a dialog with a ddl/combobox that the end-user will use to choose.
+;;Returns the user's selection, or returns "Cancel" if canceled (to keep in step with msgbox)
+PickOne(arrIn, title:="", introText:="Pick one:", defaultItemNum:=1, options:=""){
+	;;on confirm
+	onCONFIRM(objIn){
+		objIn.choice := (objIn.choice?objIn.choice:chooser.Text)
+		WinClose(form.hwnd)
+	}
+	
+	;;on cancel
+	onCANCEL(objIn){
+		objIn.choice := (objIn.choice?objIn.choice:"Cancel")
+		WinClose(form.hwnd)
+	}
+	
+	;;Store the ID of the active window, so we can reactivate it after
+	;;SF.TODO -> loop through all the windows (if any) in the current process and store their disable/enable state, before disabling them. Then restore their state before returning results.
+	prevWindow := WinGetID("A")
+	
+	;;SF.TODO -> parse input to show when strings are too long...
+	;;SF.TODO -> allow input of an alias array where selecting alias[N] in the DDL returns arrIn[N]
+	;;SF.TODO -> set default alias array to be arrIn.mapFunc((x)=>(HasMethod(x,"toString")?x.toString():x))
+	;;SF.TODO -> allow an array of {name:,item:} pairs OR {name:[],item:[]}
+	
+	form := Gui.new("+Owner",title)
+	form.addText("",introText)
+	form.choice:=""
+	;;Make sure we call onCANCEL even if user clicks the X
+	form.onEvent("Close", (*)=> onCANCEL(form))
+	chooser := form.addDDL("w300",arrIn)
+	chooser.Choose(defaultItemNum)
+	confirmBtn := form.addButton("default","Confirm")
+	confirmBtn.OnEvent("Click", (*) => onCONFIRM(form))
+	cancelBtn := form.addButton("yp","Cancel")
+	cancelBtn.OnEvent("Click", (*) => onCANCEL(form))
+	
+	form.show("w320")
+	WinWaitClose(form.hwnd)
+	
+	;;Stow our results away before releasing the gui from memory
+	x := form.choice
+	form.Destroy()
+	WinActivate(prevWindow)
+	return x
+}
+
+;;msgbox(PickOne(["Holy Smokes, Batman.","Have you met my friend Ted?","Well gee, Beav. They're givin' me the business."], "Testing...","Pick a Quote:",3),"Results")

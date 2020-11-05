@@ -1,0 +1,2 @@
+;;Outlook - Full Library
+#include %A_LineFile%\..\outlook.header.ahk2
