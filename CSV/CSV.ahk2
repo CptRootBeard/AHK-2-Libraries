@@ -1,5 +1,7 @@
-;;This class converts CSV strings into tables of data (or vice-versa)
-;;SF.TODO -> Allow the use of double quotes to include commas within string values
+;;This class converts CSV strings into 'tables' of data (or vice-versa)
+;;SF.TODO -> preserve spaces INSIDE non-quoted entries, but trim space at ends
+;;SF.TODO -> Also, a table class would probably be a good idea at this point
+
 class CSV {
 	;;Converts string to AHK data as follows:
 	;;Default is headers:=true, rowMajor:=true
@@ -21,11 +23,224 @@ class CSV {
 		;; }
 	;; }
 	
-	static Load(stringIn, delim:=",", headers:=true, rowMajor:=true){
-		;;No matter how the data is meant to output, the first step will be to split by line, then by delim
-		
-	}
-	static Dump(){
+	;;Include the nested parser class
+	#include %A_LineFile%\..\Parser.ahk2
 	
+	static Load(filePathIn, delim:=",", headers:=true, rowMajor:=true){
+		stringIn := fileRead(filePathIn)
+		
+		bufferArray := []
+		Loop Parse, stringIn, "`n", "`r" {
+			rowNum := A_Index
+			rowText := A_LoopField
+			;;Use the IF to make sure we don't get hung up on an empty row
+			if(rowText){
+				rowParser := CSV.parser.new(delim)
+				
+				;;Feed the parser one char at a time
+				Loop Parse, rowText {
+					rowParser.feed(A_LoopField)
+				}
+				;;Clean out the parser's buffer
+				rowParser.end()
+				
+				;;Pass the parser's output array
+				bufferArray.push(rowParser.output)
+			}
+		}
+		
+		if(headers){
+			if(rowMajor){
+				outer:=[]
+				;;first row of buffered data will be the headers
+				headers:=bufferArray[1]
+				
+				;;for each row in buffered data beyond the first row,
+				for r, record in bufferArray{
+					if not (r=1){
+						;;Create the Map object that will represent this row
+						inner := Map()
+						
+						;;For each item in the buffered row data, give it the proper header
+						;;and push it to the outer container
+						for c, field in record {
+							;;msgbox(c . ":" . headers[c] . ") " . field)
+							currentHeader := headers[c]
+							inner[currentHeader] := field
+						}
+						outer.push(inner)
+					}
+				}
+			} else {
+				;;Column major, with headers
+				outer := Map()
+				
+				;;first row of buffered data will be the headers
+				headers:=bufferArray[1]
+				for header in headers{
+					;;create the arrays that will rep. the columns
+					outer[header] := []
+				}
+				
+				;;for each row in buffered data beyond the first row,
+				for r, record in bufferArray{
+					if not (r=1){
+						;;for every field in row, push the field value to the appropriate column
+						for c, field in record{
+							currentHeader:= headers[c]
+							outer[currentHeader].push(field)
+						}
+					}
+				}
+			}
+		} else {
+			;;No headers, row-major
+			if(rowMajor){
+				outer := bufferArray
+			} else {
+				;;No headers, column-major
+				outer:=[]
+				;;Initialize the correct number of arrays
+				for c, column in bufferArray[1]{
+					outer.push([])
+				}
+				
+				;;Transpose the data
+				for r, row in bufferArray{
+					for c, column in row{
+						outer[c].push(column)
+					}
+				}
+			}
+		}
+		
+		;;Return our outermost array/map
+		return outer
+	}
+	
+	
+	;;Dump an array of maps, map of arrays, or array of arrays to a CSV file with the given delimiter
+	;;Returns CSV output string, which has a format determined completely by the structure of objIn
+	;;However you choose to load a given CSV using CSV.Load, CSV.Dump should write it in its original shape
+	static Dump(objIn, filePathOut, delim:=","){
+		;;Define some constants
+		AoM:=1, MoA:=2, AoA:=3
+		
+		;;Determine the format of objIn
+		dataformat:=0
+		if(objIn is Array){
+			for i in objIn{
+				if(i is Map){
+					dataformat:=AoM
+				} else if(i is Array){
+					dataformat:=AoA
+				}
+				break
+			}
+		} else if(objIn is Map){
+			for k,v in objIn{
+				if(v is Array){
+					dataformat:=MoA
+				}
+			}
+		}
+		
+		bufferArray:=[]
+		;;Throw an error if we didn't get a valid format
+		if(dataformat=0){
+			throw Exception("CSV.Dump received an invalid object type.")
+		} else if(dataformat=AoM){
+			headers:=[]
+			
+			;;Loop through once to set the header row
+			for k, v in objIn[1]{
+				headers.push(k)
+			}
+			bufferArray.push(headers)
+			
+			;;Start pushing data
+			for r in objIn{
+				datarow:=[]
+				for k, v in r{
+					field := "" . v
+					;;Enquote (is that a word?) the field if it contains a space
+					if(InStr(field, " ")){
+						field := "`"" . field . "`""
+					}
+					datarow.push(field)
+				}
+				bufferArray.push(datarow)
+			}
+		} else if(dataformat=MoA){
+			headers:=[]
+			
+			;;Loop through once to get headers
+			for k, v in objIn{
+				headers.push(k)
+			}
+			bufferArray.push(headers)
+			
+			rowCount := objIn[headers[1]].Length
+			loop rowCount {
+				row := A_Index
+				datarow:=[]
+				for col in headers{
+					field := "" . objIn[col][row]
+					;;Enquote (is that a word?) the field if it contains a space
+					if(InStr(field, " ")){
+						field := "`"" . field . "`""
+					}
+					datarow.push(field)
+				}
+				bufferArray.push(datarow)
+			}
+		} else if(dataformat=AoA){
+			;;Even though bufferArray IS an array of arrays,
+			;;we still need to loop through to wrap data properly
+			for r, row in objIn{
+				datarow:=[]
+				for c, column in row{
+					field := "" . column
+					;;Enquote (is that a word?) the field if it contains a space
+					if(InStr(field, " ")){
+						field := "`"" . field . "`""
+					}
+					datarow.push(field)
+				}
+				bufferArray.push(datarow)
+			}
+		}
+		
+		;;Now that we have our buffer array of arrays, start turning them to strings
+		finalString:=""
+		for r, row in bufferArray{
+			for c, column in row{
+				finalString .= column . delim
+			}
+			;;Trim off the extra delim from each line
+			finalString := RTrim(finalString, delim)
+			finalString .= "`r`n"
+		}
+		
+		;;Trim off the extra newline
+		finalString := RTrim(finalString, "`r`n")
+		
+		;;Write the finalString to file, overwriting
+		output := FileOpen(filePathOut, "w")
+		output.Write(finalString)
+		output.close()
+		
+		return finalString
 	}
 }
+
+;;TEST CODE for .Load: Try with diff. delims, row/column major, headers or no headers.
+;;Be sure to adjust test.csv accordingly if you're expecting certain results.
+;;msgbox(CSV.Load(A_ScriptDir . "\testLoad.csv","`t",false,false)[3][2])
+
+;;TEST CODE for .Dump: You know the drill
+/* test:= [["Col1", "Col2", "Col 3"],
+		[4, 5, 6],
+		[7, 8, 9]]
+CSV.Dump(test,A_ScriptDir . "\testDump.csv",",")
+msgbox(CSV.Load(A_ScriptDir . "\testDump.csv",",",true,false)["Col 3"][2]) */
