@@ -1,0 +1,313 @@
+;;Here are several excel enums converted into classes with read-only properties
+;;The enums themselves are now classes, and the constants are their static get-only properties.
+;;It makes for a little more typing, but it keeps the namespace clean.
+;;The actual constants have had their "xl*" prefix removed, so you must reference xlSheetVisibility.Hidden
+;;rather than xlSheetHidden (VBA style, wrong) or xlSheetVisibility.xlSheetHidden (what you might expect, still wrong)
+
+;;xlCalculation enum class---------------------------------------------
+class xlCalculation {
+	static Automatic[] => -4105 ;;Excel controls recalculation.
+	static Manual[] => -4135 ;;Calculation is done when the user requests it.
+	static SemiAutomatic[] => 2 ;;Excel controls recalculation but ignores changes in tables.
+}
+
+;;xlSheetVisibility enum class---------------------------------------------
+class xlSheetVisibility {
+	static Hidden[] => 0 ;;Hides the worksheet which the user can unhide via menu.
+	static VeryHidden[] => 2 ;;Hides the object so that the only way for you to make it visible again is by setting this property to True (the user cannot make the object visible).
+	static Visible[] => -1 ;;Displays the sheet.
+}
+
+;;xlReferenceStyle enum class---------------------------------------------
+class xlReferenceStyle {
+	;;These guys are pretty self explanatory. Specify the reference style.
+	static A1[] => 1 ;;Default.
+	static R1C1[] => -4150
+}
+
+;;xlReferenceType enum class---------------------------------------------
+class xlReferenceType {
+	;;Specify cell reference style when a formula is being converted
+	static absolute[] => 1 ;;Absolute row and abs column
+	static relative[] => 4 ;;rel row and rel column
+	static absRowRelColumn[] => 2 ;;rel row and rel column
+	static relRowAbsColumn[] => 3 ;;rel row and rel column
+	
+	;;The following are for my own convenience, not def'd by MS
+	;;(Can be much less readable, so use with care)
+	static absRabsC[] => 1
+	static aRaC[] => 1
+	static relRrelC[] => 4
+	static rRrC[] => 4
+	static absRRelC[] => 2
+	static aRrC[] => 2
+	static relRAbsC[] => 3
+	static rRaC[] => 3
+}
+
+;;xlSaveAction enum class---------------------------------------------
+class xlSaveAction {
+	static DoNotSaveChanges[] => 2
+	static SaveChanges[] => 1
+}
+
+;;xlSheetType enum class---------------------------------------------
+class xlSheetType{
+	static Chart[] => -4109 ;;Chart
+	static DialogSheet[] => -4116 ;;Dialog sheet
+	static Excel4IntlMacroSheet[] => 4 ;;Excel version 4 international macro sheet
+	static Excel4MacroSheet[] => 3 ;;Excel version 4 macro sheet
+	static Worksheet[] => -4167 ;;Worksheet
+}
+
+;;xlRGBColor enum class---------------------------------------------
+class xlRGBColor{
+	static AliceBlue[] => 16775408 ;;Alice Blue
+	static AntiqueWhite[] => 14150650 ;;Antique White
+	static Aqua[] => 16776960 ;;Aqua
+	static Aquamarine[] => 13959039 ;;Aquamarine
+	static Azure[] => 16777200 ;;Azure
+	static Beige[] => 14480885 ;;Beige
+	static Bisque[] => 12903679 ;;Bisque
+	static Black[] => 0 ;;Black
+	static BlanchedAlmond[] => 13495295 ;;Blanched Almond
+	static Blue[] => 16711680 ;;Blue
+	static BlueViolet[] => 14822282 ;;Blue Violet
+	static Brown[] => 2763429 ;;Brown
+	static BurlyWood[] => 8894686 ;;Burly Wood
+	static CadetBlue[] => 10526303 ;;Cadet Blue
+	static Chartreuse[] => 65407 ;;Chartreuse
+	static Coral[] => 5275647 ;;Coral
+	static CornflowerBlue[] => 15570276 ;;Cornflower Blue
+	static Cornsilk[] => 14481663 ;;Cornsilk
+	static Crimson[] => 3937500 ;;Crimson
+	static DarkBlue[] => 9109504 ;;Dark Blue
+	static DarkCyan[] => 9145088 ;;Dark Cyan
+	static DarkGoldenrod[] => 755384 ;;Dark Goldenrod
+	static DarkGray[] => 11119017 ;;Dark Gray
+	static DarkGreen[] => 25600 ;;Dark Green
+	static DarkGrey[] => 11119017 ;;Dark Grey
+	static DarkKhaki[] => 7059389 ;;Dark Khaki
+	static DarkMagenta[] => 9109643 ;;Dark Magenta
+	static DarkOliveGreen[] => 3107669 ;;Dark Olive Green
+	static DarkOrange[] => 36095 ;;Dark Orange
+	static DarkOrchid[] => 13382297 ;;Dark Orchid
+	static DarkRed[] => 139 ;;Dark Red
+	static DarkSalmon[] => 8034025 ;;Dark Salmon
+	static DarkSeaGreen[] => 9419919 ;;Dark Sea Green
+	static DarkSlateBlue[] => 9125192 ;;Dark Slate Blue
+	static DarkSlateGray[] => 5197615 ;;Dark Slate Gray
+	static DarkSlateGrey[] => 5197615 ;;Dark Slate Grey
+	static DarkTurquoise[] => 13749760 ;;Dark Turquoise
+	static DarkViolet[] => 13828244 ;;Dark Violet
+	static DeepPink[] => 9639167 ;;Deep Pink
+	static DeepSkyBlue[] => 16760576 ;;Deep Sky Blue
+	static DimGray[] => 6908265 ;;Dim Gray
+	static DimGrey[] => 6908265 ;;Dim Grey
+	static DodgerBlue[] => 16748574 ;;Dodger Blue
+	static FireBrick[] => 2237106 ;;Fire Brick
+	static FloralWhite[] => 15792895 ;;Floral White
+	static ForestGreen[] => 2263842 ;;Forest Green
+	static Fuchsia[] => 16711935 ;;Fuchsia
+	static Gainsboro[] => 14474460 ;;Gainsboro
+	static GhostWhite[] => 16775416 ;;Ghost White
+	static Gold[] => 55295 ;;Gold
+	static Goldenrod[] => 2139610 ;;Goldenrod
+	static Gray[] => 8421504 ;;Gray
+	static Green[] => 32768 ;;Green
+	static GreenYellow[] => 3145645 ;;Green Yellow
+	static Grey[] => 8421504 ;;Grey
+	static Honeydew[] => 15794160 ;;Honeydew
+	static HotPink[] => 11823615 ;;Hot Pink
+	static IndianRed[] => 6053069 ;;Indian Red
+	static Indigo[] => 8519755 ;;Indigo
+	static Ivory[] => 15794175 ;;Ivory
+	static Khaki[] => 9234160 ;;Khaki
+	static Lavender[] => 16443110 ;;Lavender
+	static LavenderBlush[] => 16118015 ;;Lavender Blush
+	static LawnGreen[] => 64636 ;;Lawn Green
+	static LemonChiffon[] => 13499135 ;;Lemon Chiffon
+	static LightBlue[] => 15128749 ;;Light Blue
+	static LightCoral[] => 8421616 ;;Light Coral
+	static LightCyan[] => 9145088 ;;Light Cyan
+	static LightGoldenrodYellow[] => 13826810 ;;LightGoldenrodYellow
+	static LightGray[] => 13882323 ;;Light Gray
+	static LightGreen[] => 9498256 ;;Light Green
+	static LightGrey[] => 13882323 ;;Light Grey
+	static LightPink[] => 12695295 ;;Light Pink
+	static LightSalmon[] => 8036607 ;;Light Salmon
+	static LightSeaGreen[] => 11186720 ;;Light Sea Green
+	static LightSkyBlue[] => 16436871 ;;Light Sky Blue
+	static LightSlateGray[] => 10061943 ;;Light Slate Gray
+	static LightSteelBlue[] => 14599344 ;;Light Steel Blue
+	static LightYellow[] => 14745599 ;;Light Yellow
+	static Lime[] => 65280 ;;Lime
+	static LimeGreen[] => 3329330 ;;Lime Green
+	static Linen[] => 15134970 ;;Linen
+	static Maroon[] => 128 ;;Maroon
+	static MediumAquamarine[] => 11206502 ;;Medium Aquamarine
+	static MediumBlue[] => 13434880 ;;Medium Blue
+	static MediumOrchid[] => 13850042 ;;Medium Orchid
+	static MediumPurple[] => 14381203 ;;Medium Purple
+	static MediumSeaGreen[] => 7451452 ;;Medium Sea Green
+	static MediumSlateBlue[] => 15624315 ;;Medium Slate Blue
+	static MediumSpringGreen[] => 10156544 ;;Medium Spring Green
+	static MediumTurquoise[] => 13422920 ;;Medium Turquoise
+	static MediumVioletRed[] => 8721863 ;;Medium Violet Red
+	static MidnightBlue[] => 7346457 ;;Midnight Blue
+	static MintCream[] => 16449525 ;;Mint Cream
+	static MistyRose[] => 14804223 ;;Misty Rose
+	static Moccasin[] => 11920639 ;;Moccasin
+	static NavajoWhite[] => 11394815 ;;Navajo White
+	static Navy[] => 8388608 ;;Navy
+	static NavyBlue[] => 8388608 ;;Navy Blue
+	static OldLace[] => 15136253 ;;Old Lace
+	static Olive[] => 32896 ;;Olive
+	static OliveDrab[] => 2330219 ;;Olive Drab
+	static Orange[] => 42495 ;;Orange
+	static OrangeRed[] => 17919 ;;Orange Red
+	static Orchid[] => 14053594 ;;Orchid
+	static PaleGoldenrod[] => 7071982 ;;Pale Goldenrod
+	static PaleGreen[] => 10025880 ;;Pale Green
+	static PaleTurquoise[] => 15658671 ;;Pale Turquoise
+	static PaleVioletRed[] => 9662683 ;;Pale Violet Red
+	static PapayaWhip[] => 14020607 ;;Papaya Whip
+	static PeachPuff[] => 12180223 ;;Peach Puff
+	static Peru[] => 4163021 ;;Peru
+	static Pink[] => 13353215 ;;Pink
+	static Plum[] => 14524637 ;;Plum
+	static PowderBlue[] => 15130800 ;;Powder Blue
+	static Purple[] => 8388736 ;;Purple
+	static Red[] => 255 ;;Red
+	static RosyBrown[] => 9408444 ;;Rosy Brown
+	static RoyalBlue[] => 14772545 ;;Royal Blue
+	static Salmon[] => 7504122 ;;Salmon
+	static SandyBrown[] => 6333684 ;;Sandy Brown
+	static SeaGreen[] => 5737262 ;;Sea Green
+	static Seashell[] => 15660543 ;;Seashell
+	static Sienna[] => 2970272 ;;Sienna
+	static Silver[] => 12632256 ;;Silver
+	static SkyBlue[] => 15453831 ;;Sky Blue
+	static SlateBlue[] => 13458026 ;;Slate Blue
+	static SlateGray[] => 9470064 ;;Slate Gray
+	static Snow[] => 16448255 ;;Snow
+	static SpringGreen[] => 8388352 ;;Spring Green
+	static SteelBlue[] => 11829830 ;;Steel Blue
+	static Tan[] => 9221330 ;;Tan
+	static Teal[] => 8421376 ;;Teal
+	static Thistle[] => 14204888 ;;Thistle
+	static Tomato[] => 4678655 ;;Tomato
+	static Turquoise[] => 13688896 ;;Turquoise
+	static Violet[] => 15631086 ;;Violet
+	static Wheat[] => 11788021 ;;Wheat
+	static White[] => 16777215 ;;White
+	static WhiteSmoke[] => 16119285 ;;White Smoke
+	static Yellow[] => 65535 ;;Yellow
+	static YellowGreen[] => 3329434 ;;Yellow Green
+}
+
+class xlColumnDataType{
+	static DMYFormat[] => 4 ;;DMY date format.
+	static DYMFormat[] => 7 ;;DYM date format.
+	static EMDFormat[] => 10 ;;EMD date format.
+	static GeneralFormat[] => 1 ;;General.
+	static MDYFormat[] => 3 ;;MDY date format.
+	static MYDFormat[] => 6 ;;MYD date format.
+	static SkipColumn[] => 9 ;;Column is not parsed.
+	static TextFormat[] => 2 ;;Text.
+	static YDMFormat[] => 8 ;;YDM date format.
+	static YMDFormat[] => 5 ;;YMD date format
+}
+
+class xlPasteType{
+	static All[] => -4104 ;;Everything will be pasted.
+	static AllExceptBorders[] => 7 ;;Everything except borders will be pasted.
+	static AllMergingConditionalFormats[] => 14 ;;Everything will be pasted and conditional formats will be merged.
+	static AllUsingSourceTheme[] => 13 ;;Everything will be pasted using the source theme.
+	static ColumnWidths[] => 8 ;;Copied column width is pasted.
+	static Comments[] => -4144 ;;Comments are pasted.
+	static Formats[] => -4122 ;;Copied source format is pasted.
+	static Formulas[] => -4123 ;;Formulas are pasted.
+	static FormulasAndNumberFormats[] => 11 ;;Formulas and Number formats are pasted.
+	static Validation[] => 6 ;;Validations are pasted.
+	static Values[] => -4163 ;;Values are pasted.
+	static ValuesAndNumberFormats[] => 12 ;;Values and Number formats are pasted.
+}
+
+class xlPasteSpecialOperation{
+	static Add[] => 2 ;;Copied data will be added to the value in the destination cell.
+	static Divide[] => 5 ;;Copied data will divide the value in the destination cell.
+	static Multiply[] => 4 ;;Copied data will multiply the value in the destination cell.
+	static None[] => -4142 ;;No calculation will be done in the paste operation.
+	static Subtract[] => 3 ;;Copied data will be subtracted from the value in the destination cell.
+}
+
+class xlCutCopyMode{
+	static Copy[] => 1 ;;In Copy mode
+	static Cut[] => 2 ;;In Cut mode
+}
+
+class xlCellType{
+	static AllFormatConditions[] => -4172 ;;Cells of any format.
+	static AllValidation[] => -4174 ;;Cells having validation criteria.
+	static Blanks[] => 4 ;;Empty cells.
+	static Comments[] => -4144 ;;Cells containing notes.
+	static Constants[] => 2 ;;Cells containing constants.
+	static Formulas[] => -4123 ;;Cells containing formulas.
+	static LastCell[] => 11 ;;The last cell in the used range.
+	static SameFormatConditions[] => -4173 ;;Cells having the same format.
+	static SameValidation[] => -4175 ;;Cells having the same validation criteria.
+	static Visible[] => 12 ;;All visible cells.
+}
+
+class xlPaperSize{
+	static 10x14[] => 16	;;10 in. x[] => 14 ;;in.
+	static 11x17[] => 17	;;11 in. x[] => 17 ;;in.
+	static A3[] => 8	;;A3 (297 mm x[] => 420 ;;mm)
+	static A4[] => 9	;;A4 (210 mm x[] => 297 ;;mm)
+	static A4Small[] => 10	;;A4 Small (210 mm x[] => 297 ;;mm)
+	static A5[] => 11	;;A5 (148 mm x[] => 210 ;;mm)
+	static B4[] => 12	;;B4 (250 mm x[] => 354 ;;mm)
+	static B5[] => 13	;;A5 (148 mm x[] => 210 ;;mm)
+	static Csheet[] => 24 ;;C size sheet
+	static Dsheet[] => 25 ;;D size sheet
+	static Envelope10[] => 20 ;;Envelope #10 (4-1/8 in. x 9-1/2 in.)
+	static Envelope11[] => 21 ;;Envelope #11 (4-1/2 in. x 10-3/8 in.)
+	static Envelope12[] => 22 ;;Envelope #12 (4-1/2 in. x 11 ;;in.)
+	static Envelope14[] => 23 ;;Envelope #14 (5 in. x 11-1/2 in.)
+	static Envelope9[] => 19 ;;Envelope #9 (3-7/8 in. x 8-7/8 in.)
+	static EnvelopeB4[] => 33 ;;Envelope B4 (250 mm x 353 ;;mm)
+	static EnvelopeB5[] => 34 ;;Envelope B5 (176 mm x 250 ;;mm)
+	static EnvelopeB6[] => 35 ;;Envelope B6 (176 mm x 125 ;;mm)
+	static EnvelopeC3[] => 29 ;;Envelope C3 (324 mm x 458 ;;mm)
+	static EnvelopeC4[] => 30 ;;Envelope C4 (229 mm x 324 ;;mm)
+	static EnvelopeC5[] => 28 ;;Envelope C5 (162 mm x 229 ;;mm)
+	static EnvelopeC6[] => 31 ;;Envelope C6 (114 mm x 162 ;;mm)
+	static EnvelopeC65[] => 32 ;;Envelope C65 (114 mm x 229 ;;mm)
+	static EnvelopeDL[] => 27 ;;Envelope DL (110 mm x 220 ;;mm)
+	static EnvelopeItaly[] => 36 ;;Envelope (110 mm x 230 ;;mm)
+	static EnvelopeMonarch[] => 37 ;;Envelope Monarch (3-7/8 in. x 7-1/2 in.)
+	static EnvelopePersonal[] => 38 ;;Envelope (3-5/8 in. x 6-1/2 in.)
+	static Esheet[] => 26 ;;E size sheet
+	static Executive[] => 7 ;;Executive (7-1/2 in. x 10-1/2 in.)
+	static FanfoldLegalGerman[] => 41	;;German Legal Fanfold (8-1/2 in. x[] => 13 ;;in.)
+	static FanfoldStdGerman[] => 40	;;German Legal Fanfold (8-1/2 in. x[] => 13 ;;in.)
+	static FanfoldUS[] => 39	;;U.S. Standard Fanfold (14-7/8 in. x[] => 11 ;;in.)
+	static Folio[] => 14	;;Folio (8-1/2 in. x[] => 13 ;;in.)
+	static Ledger[] => 4	;;Ledger (17 in. x[] => 11 ;;in.)
+	static Legal[] => 5	;;Legal (8-1/2 in. x[] => 14 ;;in.)
+	static Letter[] => 1	;;Letter (8-1/2 in. x[] => 11 ;;in.)
+	static LetterSmall[] => 2	;;Letter Small (8-1/2 in. x[] => 11 ;;in.)
+	static Note[] => 18	;;Note (8-1/2 in. x[] => 11 ;;in.)
+	static Quarto[] => 15	;;Quarto (215 mm x[] => 275 ;;mm)
+	static Statement[] => 6 ;;Statement (5-1/2 in. x 8-1/2 in.)
+	static Tabloid[] => 3	;;Tabloid (11 in. x[] => 17 ;;in.)
+	static User[] => 256 ;;User-defined
+}
+
+;;xlWindowState enum class
+class xlWindowState {
+	static Maximized[] => -4137
+	static Minimized[] => -4140
+	static Normal[] => -4143
+}

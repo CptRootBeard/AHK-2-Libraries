@@ -1,0 +1,2 @@
+;;Excel - Full Library
+#include %A_LineFile%\..\excel.header.ahk2
