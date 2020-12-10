@@ -1,0 +1,106 @@
+;;Mealy FSM - Can be extended as a class OR templated as raw code
+class MealyFSM {
+	;;Attach stateTable as a read-only dynamic prop
+	attachStateTable(stateTableIn){
+		this.DefineProp("stateTable",{get: (x) => stateTableIn})
+	}
+	
+	;;Attach outputTable as a read-only dynamic prop
+	attachOutputTable(outputTableIn){
+		this.DefineProp("outputTable",{get: (x) => outputTableIn})
+	}
+	
+	inputSignal := 0 ;;TODO - create some sort of input validation
+	currentState := 0
+	
+	;;Returns the "Total Input State" - an integer representing the inputSignal as well as the current state
+	;;e.g. inputSignal = 3 in a machine with four states total. We need 3 bits to represent 4 states -> stateBits := 3
+	;;	Assuming our currentState = 2 of 4, then our TIS would be:
+	;;	TIS := (3 << 3) + 2
+	;;	:= 26
+	TIS[] => (this.inputSignal << this.stateBits)+this.currentState
+	
+	;;Returns the value of the next state based on the current TIS
+	nextState[]{
+		get{
+			if(this.HasOwnProp("stateTable")){
+				;;TODO - Check stateTable for key (throw error otherwise) w/o breaking interface
+				x := this.stateTable[this.TIS]
+				return x
+			} else {
+				return ""
+			}
+		}
+	}
+	
+	;;Returns the value of the current outputSignal based on the current TIS
+	outputSignal[]{
+		get{
+			if(this.HasOwnProp("outputTable")){
+				;;TODO - Check outputTable for key (throw error otherwise) w/o breaking interface
+				x := this.outputTable[this.TIS]
+				return x
+			} else {
+				return ""
+			}
+		}
+	}
+	
+	;;These are the methods you'll want to edit or overwrite in a subclass-------------------------------
+	__New(NumberOfStates, startState:=0){
+		;;Determine how many bits needed for states, then set startState
+		this.stateBits := ceil(ln(NumberOfStates)/ln(2))
+		this.currentState := startState
+	}
+	
+	
+	;;This is the code you want to run every time you send the FSM a 'clock cycle' so-to-speak
+	Step(clearInputBetweenSteps:=false){
+		if not (this.HasOwnProp("stateTable") AND this.HasOwnProp("outputTable")){
+			throw Exception("This FSM instance is missing either a state or output table.")
+		}
+		
+		;;Step to the next state depending upon TIS
+		this.currentState := this.nextState
+		
+		;;Clear the inputSignal if desired
+		if(clearInputBetweenSteps){
+			this.inputSignal := 0
+		}
+		
+		;;Return the outputSignal (for convenience)
+		return this.outputSignal
+	}
+	
+	;;If you want to set the input and step in one call (i.e., treat new input as a rising clock edge),
+	;;use Feed instead of step. Works well for feeding streams of input. Thus the name.
+	Feed(someInput, clearInputBetweenSteps:=false){
+		this.inputSignal := someInput
+		return this.Step(clearInputBetweenSteps)
+	}
+}
+
+
+;;;;TEST - Create a state machine with 2 states (on/off) and provide an input that toggles when high (1=toggle, 0=nothing)
+;;;;Adjusted version of the MooreFSM test -> notice the new outputTable. It's the same machine, same logic.
+;;;;Outputs are "on"/"off"
+;;test:=MealyFSM.New(2,0)
+;;
+;;testStateTable :=Map(0,0
+;;					,1,1
+;;					,2,1
+;;					,3,0)
+;;
+;;testOutputTable :=Map(0,"off"
+;;					,1,"on"
+;;					,2,"off"
+;;					,3,"on")
+;;
+;;test.attachOutputTable(testOutputTable)
+;;test.attachStateTable(testStateTable)
+;;
+;;msgbox("Start Value: " . test.OutputSignal)
+;;msgbox("After (1) press 1: " . test.Feed(1))
+;;msgbox("After (2) press 1: " . test.Feed(1))
+;;msgbox("After (3) press 0: " . test.Feed(0))
+;;msgbox("After (4) press 1: " . test.Feed(1))

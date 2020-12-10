@@ -1,0 +1,4 @@
+;;Loads all 3 main types of FSM - Moore, Mealy, or State Model (UMLish)
+#include %A_LineFile%\..\MealyFSM.ahk2
+#include %A_LineFile%\..\MooreFSM.ahk2
+#include %A_LineFile%\..\StateModelFSM.ahk2

@@ -1,0 +1,34 @@
+;;FSM using the State Model
+class StateModelFSM {
+	STARTING_STATE := ""
+	
+	;;All states in this FSM should extend this class
+	class IState {
+		;;Make sure these methods are static and take an instance ref. as their first param
+		static ChangeState(self,destState){
+			self.state := %self.__Class%.%destState%
+		}
+	}
+	
+	;;Constructor
+	__New(){
+		this.state := %this.__Class%.%this.STARTING_STATE%
+	}
+	
+	;;Delegate all undefined function calls to the current state
+	__Call(name, prms*){
+		methodToCall := GetMethod(this.state, name)
+		
+		;;Because we're calling static methods, the first parameter must be the class which holds the method.
+		;;In this case, that would be the current state.
+		;; -> (When 'this' is encountered in a static method's definition, it refers to the class object itself)
+		;;If we were calling non-static methods, the first parameter would be the instance to perform the method.
+		;; -> (When 'this' is encountered in a non-static method's definition, it refers to the instance, not the class)
+		;;We're also passing a reference to 'this' FSM instance to fulfill the Singleton requirements of the state model.
+		if(methodToCall.MaxParams > 2){
+			return methodToCall.Call(this.state, this, prms*)
+		} else {
+			return methodToCall.Call(this.state, this)
+		}
+	}
+}

@@ -1,0 +1,88 @@
+#include %A_LineFile%\..\StateModelFSM.ahk2
+
+;;FSM using the State Model
+class lightBulbFSM extends stateModelFSM {
+	STARTING_STATE := "StateOff"
+	
+	;;All states in this FSM should extend this class
+	class IState extends stateModelFSM.IState{
+		static Toggle(self){
+		}
+		
+		static getOutput(self){
+		}
+	}
+	
+	class StateOff extends lightBulbFSM.IState{
+		static Toggle(self){
+			;;self.state := %self.__Class%.StateOn
+			this.changeState(self, "StateOn")
+		}
+		
+		static getOutput(self){
+			return "Off"
+		}
+	}
+	
+	class StateOn extends lightBulbFSM.IState{
+		static Toggle(self){
+			;;self.state := %self.__Class%.StateOff
+			this.changeState(self, "StateOff")
+		}
+		
+		static getOutput(self){
+			return "On"
+		}
+	}
+}
+
+;;Notice how easy it is to override the startState and add a new state altogether
+class extraSpecialBulb extends lightBulbFSM{
+	STARTING_STATE := "StateRed"
+	
+	class StateRed extends lightBulbFSM.IState{
+		static getOutput(self){
+			return "red"
+		}
+		
+		static Toggle(self){
+			self.state := %self.__Class%.StateGreen
+		}
+	}
+	
+	class StateGreen extends lightBulbFSM.StateOn{
+		static getOutput(self){
+			return "green"
+		}
+	}
+}
+
+;;Add a ;; front comment to the line below to uncomment this whole block
+/*;;Test Code
+testbulb := lightBulbFSM.New()
+msgbox("The light is " . testbulb.getOutput() . ".`rCould you please turn it on?")
+
+loop 2 {
+	testbulb.Toggle()
+	msgbox("*Flips switch*`r*Light turns " . testbulb.getOutput() . ".*")
+}
+msgbox("*The light is " . testbulb.getOutput() . ".*`rThank you...`rVery helpful.")
+
+testbulb2 := extraSpecialBulb.New()
+msgbox("The other light is " . testbulb2.getOutput() . ".`rWhat the heck? Could you please turn it off?")
+
+testbulb2.Toggle()
+msgbox("*Flips switch*`r*Light turns " . testbulb2.getOutput() . ".*")
+msgbox("*The light is " . testbulb2.getOutput() . ".*`rTry again.")
+
+testbulb2.Toggle()
+msgbox("*Flips switch*`r*Light turns " . testbulb2.getOutput() . ".*")
+msgbox("*The light is " . testbulb2.getOutput() . ".*`rMuch better. Now I can't see at all.")
+
+loop 2 {
+	testbulb2.Toggle()
+	msgbox("*Flips switch*`r*Light turns " . testbulb2.getOutput() . ".*")
+}
+msgbox("*The light is " . testbulb.getOutput() . ".*`rThank you...`rVery helpful.")
+
+;;*/
